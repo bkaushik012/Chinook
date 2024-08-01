@@ -1,0 +1,41 @@
+--Top 10 selling Tracks
+SELECT t.Name AS TrackName, COUNT(il.TrackId) AS Sales
+FROM InvoiceLine il
+JOIN Track t ON il.TrackId = t.TrackId
+GROUP BY il.TrackId
+ORDER BY Sales DESC
+LIMIT 10;
+
+--Select by gnre
+SELECT g.Name AS Genre, SUM(il.UnitPrice * il.Quantity) AS TotalSales
+FROM InvoiceLine il
+JOIN Track t ON il.TrackId = t.TrackId
+JOIN Genre g ON t.GenreId = g.GenreId
+GROUP BY g.GenreId
+ORDER BY TotalSales DESC;
+
+
+--Monthly Sales Trend
+SELECT strftime('%Y-%m', i.InvoiceDate) AS Month, SUM(i.Total) AS TotalSales
+FROM Invoice i
+GROUP BY Month
+ORDER BY Month;
+
+--Top Customer by Sales
+SELECT c.FirstName || ' ' || c.LastName AS CustomerName, SUM(i.Total) AS TotalSpent
+FROM Invoice i
+JOIN Customer c ON i.CustomerId = c.CustomerId
+GROUP BY c.CustomerId
+ORDER BY TotalSpent DESC
+LIMIT 10;
+
+--Employee Sale Performance
+SELECT e.FirstName || ' ' || e.LastName AS EmployeeName, SUM(i.Total) AS TotalSales
+FROM Invoice i
+JOIN Customer c ON i.CustomerId = c.CustomerId
+JOIN Employee e ON c.SupportRepId = e.EmployeeId
+GROUP BY e.EmployeeId
+ORDER BY TotalSales DESC;
+
+
+
